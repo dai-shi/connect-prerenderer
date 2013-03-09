@@ -8,10 +8,13 @@ How to use
 
     % npm install connect-prerenderer
 
+In app.js:
+
     var express = require('express');
     var prerenderer = require('connect-prerenderer');
     var app = express();
     app.use(prerenderer());
+    ...
 
 TODOs
 -----
