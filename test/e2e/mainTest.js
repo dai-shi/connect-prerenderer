@@ -20,5 +20,16 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="id002"]').text()).toContain('simple2');
   });
 
+  it('should get prerendered /simpledom.html', function() {
+    browser().navigateTo('/PRERENDER/simpledom.htmlHASH');
+    expect(element('div[id="id001"]').text()).toContain('simple1');
+  });
+
+  it('should get prerendered /simplejs.html', function() {
+    browser().navigateTo('/PRERENDER-simplejs.htmlHASH');
+    expect(element('div[id="id002"]').text()).toContain('simple2');
+  });
+
+
 
 });
