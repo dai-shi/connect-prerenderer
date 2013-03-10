@@ -32,12 +32,13 @@ function prerenderer(options) {
   return function(req, res, next) {
     var url = getTargetURL(req, options);
     if (url) {
-      renderURL(url, function(err, content) {
+      //console.log('headers:', req.headers);
+      renderURL(url, req.headers, function(err, content) {
         if (err) {
           console.log('renderURL failed: ', err);
           next();
         } else {
-          //console.log('prerendered=', content);
+          //console.log('prerendered:' , content);
           //TODO deal with all those headers
           res.end(content);
         }
@@ -72,11 +73,10 @@ function getTargetURL(req, options) {
   return targetGenerator(req.url);
 }
 
-//TODO support cookies
-function renderURL(url, callback) {
+function renderURL(url, headers, callback) {
   request({
     uri: URL.parse(url),
-    headers: {}
+    headers: headers // we assume our target is secure and send all headers
   }, function(err, res, body) {
     if (err) {
       callback(err);
@@ -84,6 +84,7 @@ function renderURL(url, callback) {
     }
     var document = jsdom.jsdom(body, null, {
       url: url,
+      cookie: headers.cookie,
       features: {
         FetchExternalResources: ['script'],
         ProcessExternalResources: ['script']

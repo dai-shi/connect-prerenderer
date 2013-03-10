@@ -4,6 +4,7 @@ var prerenderer = require('../../connect-prerenderer.js');
 var app = express();
 
 app.use(express.logger());
+app.use(express.cookieParser());
 app.use(prerenderer());
 app.use(express.static(__dirname + '/public'));
 
@@ -14,7 +15,8 @@ app.get('/', function(req, res) {
 app.get('/data.json', function(req, res) {
   res.json({
     a: 12345,
-    b: 22346
+    b: 22346,
+    cookiex: req.cookies.x
   });
 });
 

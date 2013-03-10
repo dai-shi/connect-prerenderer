@@ -41,5 +41,17 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="id003"]').text()).toBe('12345');
   });
 
+  it('should get /simplecookie.html', function() {
+    browser().navigateTo('/simplecookie.html');
+    sleep(1);
+    expect(element('div[id="id004"]').text()).toBe('7890');
+  });
+
+  it('should get prerendered /simplecookie.html', function() {
+    browser().navigateTo('/PRERENDER-simplecookie.html');
+    expect(element('div[id="id004"]').text()).toBe('7890');
+  });
+
+
 
 });

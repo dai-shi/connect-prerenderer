@@ -16,8 +16,12 @@ In app.js:
     app.use(prerenderer());
     ...
 
+Limitations
+-----------
+
+* Cookies are only passed to 127.0.0.1.
+
 TODOs
 -----
 
 * (see TODO in the source code)
-* cookie support

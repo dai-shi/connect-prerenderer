@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      function testCall () {
+        if (!document.body.getAttribute('data-prerendered')) {
+          document.cookie = 'x=7890';
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            var data = JSON.parse(this.responseText);
+            var ele = document.getElementById('id004');
+            ele.innerHTML += data.cookiex;
+          };
+          xhr.open('GET', '/data.json', true);
+          xhr.send();
+        }
+      }
+      window.addEventListener('load', testCall);
+</script>
+  </head>
+  <body>
+    <div id="id004"></div>
+  </body>
+</html>
