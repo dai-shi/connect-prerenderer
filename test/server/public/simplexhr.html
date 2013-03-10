@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      function testCall () {
+        if (!document.body.getAttribute('data-prerendered')) {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            var data = JSON.parse(this.responseText);
+            var ele = document.getElementById('id003');
+            ele.innerHTML += data.a;
+          };
+          xhr.open('GET', '/data.json', true);
+          xhr.send();
+        }
+      }
+      window.addEventListener('load', testCall);
+</script>
+  </head>
+  <body>
+    <div id="id003"></div>
+  </body>
+</html>

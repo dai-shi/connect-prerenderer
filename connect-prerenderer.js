@@ -24,6 +24,8 @@
 
 /*jshint es5:true */
 
+var URL = require('url');
+var request = require('request');
 var jsdom = require('jsdom');
 
 function prerenderer(options) {
@@ -35,6 +37,7 @@ function prerenderer(options) {
           console.log('renderURL failed: ', err);
           next();
         } else {
+          //console.log('prerendered=', content);
           //TODO deal with all those headers
           res.end(content);
         }
@@ -45,38 +48,53 @@ function prerenderer(options) {
   }
 }
 
-var prerenderURLRegex = new RegExp('^/PRERENDER[-/](.*)HASH(.*)');
+var prerenderURLPrefix = '/PRERENDER';
+var prerenderURLPrefixLengthPlusOne = prerenderURLPrefix.length + 1;
 
 function getTargetURL(req, options) {
   options = options || {};
   var urlChecker = options['urlChecker'] || function(url) {
-      return prerenderURLRegex.test(url);
+      return url.lastIndexOf(prerenderURLPrefix, 0) === 0 && url.length >= prerenderURLPrefixLengthPlusOne;
     };
+  if (!urlChecker(req.url)) {
+    return null;
+  }
+
   var targetGenerator = options['targetGenerator'] || function(url) {
       var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
       var replacer = options['targetReplacer'] || function(url) {
-          return url.replace(prerenderURLRegex, '/$1#$2');
+          url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
+          return url.replace(/HASH/, '#');
         };
-      return prefix + replacer(url);
+      url = replacer(url);
+      return prefix + url;
     };
-
-  return urlChecker(req.url) && targetGenerator(req.url);
+  return targetGenerator(req.url);
 }
 
-//TODO support cookies, xhr
+//TODO support cookies
 function renderURL(url, callback) {
-  jsdom.env(url, {
-    features: {
-      FetchExternalResources: ['script'],
-      ProcessExternalResources: ['script']
-    }
-  }, function(err, window) {
+  request({
+    uri: URL.parse(url),
+    headers: {}
+  }, function(err, res, body) {
     if (err) {
       callback(err);
       return;
     }
-    var content = window.document.innerHTML;
-    callback(err, content);
+    var document = jsdom.jsdom(body, null, {
+      url: url,
+      features: {
+        FetchExternalResources: ['script'],
+        ProcessExternalResources: ['script']
+      }
+    });
+    // TODO too slow, want's to check when done.
+    setTimeout(function() {
+      document.body.setAttribute('data-prerendered', 'true');
+      var content = document.innerHTML;
+      callback(err, content);
+    }, 1500);
   });
 }
 

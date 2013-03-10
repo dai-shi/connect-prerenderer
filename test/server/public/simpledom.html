@@ -1,10 +1,11 @@
 <html>
   <body>
-    <div id="id001">
-    </div>
+    <div id="id001"></div>
     <script>
-      var ele = document.getElementById('id001');
-      ele.innerHTML = 'simple1';
+      if (!document.body.getAttribute('data-prerendered')) {
+        var ele = document.getElementById('id001');
+        ele.innerHTML += 'simple1';
+      }
     </script>
   </body>
 </html>

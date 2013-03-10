@@ -7,8 +7,16 @@ app.use(express.logger());
 app.use(prerenderer());
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(req, res){
-    res.send('It works!');
+app.get('/', function(req, res) {
+  res.send('It works!');
 });
+
+app.get('/data.json', function(req, res) {
+  res.json({
+    a: 12345,
+    b: 22346
+  });
+});
+
 
 app.listen(5050);

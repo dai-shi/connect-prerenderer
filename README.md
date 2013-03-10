@@ -19,5 +19,5 @@ In app.js:
 TODOs
 -----
 
+* (see TODO in the source code)
 * cookie support
-* XHR support

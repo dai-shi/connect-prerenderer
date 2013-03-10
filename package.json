@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "author": "Daishi Kato <daishi@axlight.com>",
   "dependencies": {
-    "jsdom": ">=0.5.1"
+    "jsdom": "https://github.com/dai-shi/jsdom/tarball/master",
+    "request": "~2.14.0"
   },
   "devDependencies": {
     "mocha": "*",
