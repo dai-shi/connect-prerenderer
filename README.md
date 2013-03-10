@@ -16,6 +16,14 @@ In app.js:
     app.use(prerenderer());
     ...
 
+Options
+-------
+
+* urlChecker
+* targetGenerator
+  * targetPrefix
+  * targetReplacer
+
 Limitations
 -----------
 

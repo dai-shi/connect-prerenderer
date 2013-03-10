@@ -24,6 +24,7 @@
 
 /*jshint es5:true */
 
+var http = require('http');
 var URL = require('url');
 var request = require('request');
 var jsdom = require('jsdom');
@@ -33,13 +34,19 @@ function prerenderer(options) {
     var url = getTargetURL(req, options);
     if (url) {
       //console.log('headers:', req.headers);
-      renderURL(url, req.headers, function(err, content) {
-        if (err) {
+      renderURL(url, req.headers, function(err, content, headers) {
+        if (typeof err === 'number') {
+          res.statusCode = err;
+          content = http.STATUS_CODES[err];
+          res.setHeader('content-length', content.length);
+          res.end(content);
+        } else if (err) {
           console.log('renderURL failed: ', err);
           next();
         } else {
           //console.log('prerendered:' , content);
-          //TODO deal with all those headers
+          headers['content-length'] = content.length;
+          res.writeHead(200, headers);
           res.end(content);
         }
       });
@@ -82,6 +89,10 @@ function renderURL(url, headers, callback) {
       callback(err);
       return;
     }
+    if (res.statusCode != 200) {
+      callback(res.statusCode);
+      return;
+    }
     var document = jsdom.jsdom(body, null, {
       url: url,
       cookie: headers.cookie,
@@ -94,8 +105,8 @@ function renderURL(url, headers, callback) {
     setTimeout(function() {
       document.body.setAttribute('data-prerendered', 'true');
       var content = document.innerHTML;
-      callback(err, content);
-    }, 1500);
+      callback(err, content, res.headers);
+    }, 1000);
   });
 }
 
