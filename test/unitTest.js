@@ -65,7 +65,7 @@ describe('unit test for prerenderer', function() {
   });
 
   it('should render google.com', function(done) {
-    prerenderer.renderURL('http://www.google.com/', {}, function(err, content) {
+    prerenderer.renderURL('http://www.google.com/', {}, 1000, function(err, content) {
       assert.ok(content.indexOf('google.com') >= 0);
       done();
     });

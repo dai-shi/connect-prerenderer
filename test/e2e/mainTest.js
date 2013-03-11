@@ -52,6 +52,16 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="id004"]').text()).toBe('7890');
   });
 
+  it('should get /testonprerendered.html', function() {
+    browser().navigateTo('/testonprerendered.html');
+    sleep(1);
+    expect(element('div[id="id005"]').text()).toBe('simple5');
+  });
+
+  it('should get prerendered /testonprerendered.html', function() {
+    browser().navigateTo('/PRERENDER-testonprerendered.html');
+    expect(element('div[id="id005"]').text()).toBe('simple5');
+  });
 
 
 });

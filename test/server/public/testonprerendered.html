@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <div id="id005"></div>
+    <script>
+      if (!document.body.getAttribute('data-prerendered')) {
+        var ele = document.getElementById('id005');
+        ele.innerHTML += 'simple5';
+        if (document.onprerendered) {
+          document.onprerendered();
+        }
+      }
+    </script>
+  </body>
+</html>

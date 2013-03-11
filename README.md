@@ -19,10 +19,17 @@ In app.js:
 Options
 -------
 
-* urlChecker
-* targetGenerator
-  * targetPrefix
-  * targetReplacer
+* urlChecker: a function to check if a url should be prerendered.
+* targetGenerator: a function to generate a new one for HTTP request.
+  * targetPrefix: an internal string used in the default targetGenerator.
+  * targetReplacer: an internal function used in the default targetGenerator.
+* timeout: an integer in milliseconds to specify how long it watis to prerender.
+
+Coding conventions (client-side)
+--------------------------------
+
+* If an html is prerendered, the body is like: `<body data-prerendered="true">`
+* When JavaScript code finishes prerendering, it should call: `document.onprerendered()`
 
 Limitations
 -----------
@@ -32,4 +39,4 @@ Limitations
 TODOs
 -----
 
-* (see TODO in the source code)
+(No more ongoing issues. Please file it if you have one.)

@@ -61,7 +61,7 @@ function getTargetURL(req, options) {
   return targetGenerator(req.url);
 }
 
-function renderURL(url, headers, callback) {
+function renderURL(url, headers, timeout, callback) {
   request({
     uri: URL.parse(url),
     headers: headers // we assume our target is secure and send all headers
@@ -75,8 +75,26 @@ function renderURL(url, headers, callback) {
       return;
     }
     var document;
+    var timer = null;
+    var done = function() {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+        var content;
+        try {
+          document.body.setAttribute('data-prerendered', 'true');
+          content = document.innerHTML;
+        } catch (err) {
+          callback(err);
+          return;
+        }
+        callback(null, content, res.headers);
+      }
+    };
+    timer = setTimeout(done, timeout);
     try {
-      document = jsdom.jsdom(body, null, {
+      document = jsdom.jsdom('', null, {
+        deferClose: true,
         url: url,
         cookie: headers.cookie,
         features: {
@@ -84,31 +102,27 @@ function renderURL(url, headers, callback) {
           ProcessExternalResources: ['script']
         }
       });
+      document.onprerendered = done;
+      document.write(body);
+      document.close();
     } catch (err) {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       callback(err);
       return;
     }
-    // TODO too slow, want's to check when done.
-    setTimeout(function() {
-      var content;
-      try {
-        document.body.setAttribute('data-prerendered', 'true');
-        content = document.innerHTML;
-      } catch (err) {
-        callback(err);
-        return;
-      }
-      callback(null, content, res.headers);
-    }, 1000);
   });
 }
 
 function prerenderer(options) {
   return function(req, res, next) {
     var url = getTargetURL(req, options);
+    var timeout = (options ? options.timeout : 5000);
     if (url) {
       //console.log('headers:', req.headers);
-      renderURL(url, req.headers, function(err, content, headers) {
+      renderURL(url, req.headers, timeout, function(err, content, headers) {
         if (typeof err === 'number') {
           res.statusCode = err;
           content = http.STATUS_CODES[err];
