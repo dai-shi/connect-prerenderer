@@ -45,7 +45,15 @@ function getTargetURL(req, options) {
       var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
       var replacer = options['targetReplacer'] || function(url) {
           url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
-          return url.replace(/HASH/, '#');
+          var match = url.match(/HASH([-_/:])?/);
+          if (match) {
+            url = url.replace(/HASH/, '#');
+            if (match[1]) {
+              var hex = match[1].charCodeAt().toString(16);
+              url = url.replace(new RegExp('\\x' + hex), '/');
+            }
+          }
+          return url;
         };
       url = replacer(url);
       return prefix + url;
@@ -70,13 +78,13 @@ function renderURL(url, headers, callback) {
     try {
       document = jsdom.jsdom(body, null, {
         url: url,
-               cookie: headers.cookie,
-               features: {
-                 FetchExternalResources: ['script'],
-               ProcessExternalResources: ['script']
-               }
+        cookie: headers.cookie,
+        features: {
+          FetchExternalResources: ['script'],
+          ProcessExternalResources: ['script']
+        }
       });
-    } catch(err) {
+    } catch (err) {
       callback(err);
       return;
     }
@@ -86,7 +94,7 @@ function renderURL(url, headers, callback) {
       try {
         document.body.setAttribute('data-prerendered', 'true');
         content = document.innerHTML;
-      } catch(err) {
+      } catch (err) {
         callback(err);
         return;
       }

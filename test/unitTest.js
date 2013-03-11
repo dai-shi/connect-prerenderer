@@ -54,6 +54,14 @@ describe('unit test for prerenderer', function() {
         host: '1.2.3.4:5678'
       }
     }), 'http://1.2.3.4:5678/abc');
+
+    assert.equal(prerenderer.getTargetURL({
+      url: '/PRERENDER-abcHASH-def',
+      headers: {
+        host: '1.2.3.4:5678'
+      }
+    }), 'http://1.2.3.4:5678/abc#/def');
+
   });
 
   it('should render google.com', function(done) {
