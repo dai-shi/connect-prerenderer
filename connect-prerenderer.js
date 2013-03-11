@@ -29,33 +29,6 @@ var URL = require('url');
 var request = require('request');
 var jsdom = require('jsdom');
 
-function prerenderer(options) {
-  return function(req, res, next) {
-    var url = getTargetURL(req, options);
-    if (url) {
-      //console.log('headers:', req.headers);
-      renderURL(url, req.headers, function(err, content, headers) {
-        if (typeof err === 'number') {
-          res.statusCode = err;
-          content = http.STATUS_CODES[err];
-          res.setHeader('content-length', content.length);
-          res.end(content);
-        } else if (err) {
-          console.log('renderURL failed: ', err);
-          next();
-        } else {
-          //console.log('prerendered:' , content);
-          headers['content-length'] = content.length;
-          res.writeHead(200, headers);
-          res.end(content);
-        }
-      });
-    } else {
-      next();
-    }
-  }
-}
-
 var prerenderURLPrefix = '/PRERENDER';
 var prerenderURLPrefixLengthPlusOne = prerenderURLPrefix.length + 1;
 
@@ -93,29 +66,68 @@ function renderURL(url, headers, callback) {
       callback(res.statusCode);
       return;
     }
-    var document = jsdom.jsdom(body, null, {
-      url: url,
-      cookie: headers.cookie,
-      features: {
-        FetchExternalResources: ['script'],
-        ProcessExternalResources: ['script']
-      }
-    });
+    var document;
+    try {
+      document = jsdom.jsdom(body, null, {
+        url: url,
+               cookie: headers.cookie,
+               features: {
+                 FetchExternalResources: ['script'],
+               ProcessExternalResources: ['script']
+               }
+      });
+    } catch(err) {
+      callback(err);
+      return;
+    }
     // TODO too slow, want's to check when done.
     setTimeout(function() {
-      document.body.setAttribute('data-prerendered', 'true');
-      var content = document.innerHTML;
-      callback(err, content, res.headers);
+      var content;
+      try {
+        document.body.setAttribute('data-prerendered', 'true');
+        content = document.innerHTML;
+      } catch(err) {
+        callback(err);
+        return;
+      }
+      callback(null, content, res.headers);
     }, 1000);
   });
+}
+
+function prerenderer(options) {
+  return function(req, res, next) {
+    var url = getTargetURL(req, options);
+    if (url) {
+      //console.log('headers:', req.headers);
+      renderURL(url, req.headers, function(err, content, headers) {
+        if (typeof err === 'number') {
+          res.statusCode = err;
+          content = http.STATUS_CODES[err];
+          res.setHeader('content-length', content.length);
+          res.end(content);
+        } else if (err) {
+          console.log('renderURL failed: ', err);
+          next();
+        } else {
+          //console.log('prerendered:' , content);
+          headers['content-length'] = content.length;
+          res.writeHead(200, headers);
+          res.end(content);
+        }
+      });
+    } else {
+      next();
+    }
+  };
 }
 
 
 
 if (process.env.NODE_ENV === 'unit-test') {
-  exports.prerenderer = prerenderer;
   exports.getTargetURL = getTargetURL;
   exports.renderURL = renderURL;
+  exports.prerenderer = prerenderer;
 } else {
   module.exports = prerenderer;
 }
