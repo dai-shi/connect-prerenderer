@@ -119,7 +119,7 @@ function renderURL(url, headers, timeout, callback) {
 function prerenderer(options) {
   return function(req, res, next) {
     var url = getTargetURL(req, options);
-    var timeout = (options ? options.timeout : 5000);
+    var timeout = (options && options.timeout ? options.timeout : 5000);
     if (url) {
       //console.log('headers:', req.headers);
       renderURL(url, req.headers, timeout, function(err, content, headers) {
