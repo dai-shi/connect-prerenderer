@@ -22,7 +22,8 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*jshint es5:true */
+/* jshint es5: true */
+/* jshint evil: true */
 
 var http = require('http');
 var URL = require('url');
