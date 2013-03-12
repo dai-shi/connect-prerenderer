@@ -1,3 +1,7 @@
+/* global browser: false */
+/* global element: false */
+/* global sleep: false */
+
 describe('main e2e test for prerenderer', function() {
 
   it('should get /', function() {
@@ -63,5 +67,15 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="id005"]').text()).toBe('simple5');
   });
 
+  it('should get /ngtest01.html', function() {
+    browser().navigateTo('/ngtest01.html');
+    sleep(1);
+    expect(element('div[id="ngtestid"]').text()).toBe('22346');
+  });
+
+  it('should get prerendered /ngtest01.html', function() {
+    browser().navigateTo('/PRERENDER-ngtest01.html');
+    expect(element('div[id="ngtestid"]').text()).toBe('22346');
+  });
 
 });
