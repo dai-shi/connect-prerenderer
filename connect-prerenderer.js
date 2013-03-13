@@ -126,14 +126,12 @@ function prerenderer(options) {
       renderURL(url, req.headers, timeout, function(err, content, headers) {
         if (typeof err === 'number') {
           content = http.STATUS_CODES[err];
-          res.setHeader('content-length', content.length);
           res.status(err).end(content);
         } else if (err) {
           console.log('renderURL failed: ', err);
           next();
         } else {
           //console.log('prerendered:' , content);
-          headers['content-length'] = content.length;
           res.status(200).end(content);
         }
       });
