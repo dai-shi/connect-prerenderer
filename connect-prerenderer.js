@@ -125,18 +125,16 @@ function prerenderer(options) {
       //console.log('headers:', req.headers);
       renderURL(url, req.headers, timeout, function(err, content, headers) {
         if (typeof err === 'number') {
-          res.statusCode = err;
           content = http.STATUS_CODES[err];
           res.setHeader('content-length', content.length);
-          res.end(content);
+          res.status(err).end(content);
         } else if (err) {
           console.log('renderURL failed: ', err);
           next();
         } else {
           //console.log('prerendered:' , content);
           headers['content-length'] = content.length;
-          res.writeHead(200, headers);
-          res.end(content);
+          res.status(200).end(content);
         }
       });
     } else {
