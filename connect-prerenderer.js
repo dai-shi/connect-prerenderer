@@ -46,7 +46,7 @@ function getTargetURL(req, options) {
       var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
       var replacer = options['targetReplacer'] || function(url) {
           url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
-          var match = url.match(/HASH([-_/:])?/);
+          var match = url.match(/HASH([-_\/:])?/);
           if (match) {
             url = url.replace(/HASH/, '#');
             if (match[1]) {
@@ -125,18 +125,14 @@ function prerenderer(options) {
       //console.log('headers:', req.headers);
       renderURL(url, req.headers, timeout, function(err, content, headers) {
         if (typeof err === 'number') {
-          res.statusCode = err;
           content = http.STATUS_CODES[err];
-          res.setHeader('content-length', content.length);
-          res.end(content);
+          res.status(err).end(content);
         } else if (err) {
           console.log('renderURL failed: ', err);
           next();
         } else {
           //console.log('prerendered:' , content);
-          headers['content-length'] = content.length;
-          res.writeHead(200, headers);
-          res.end(content);
+          res.status(200).end(content);
         }
       });
     } else {
