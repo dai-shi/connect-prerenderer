@@ -46,7 +46,7 @@ function getTargetURL(req, options) {
       var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
       var replacer = options['targetReplacer'] || function(url) {
           url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
-          var match = url.match(/HASH([-_/:])?/);
+          var match = url.match(/HASH([-_\/:])?/);
           if (match) {
             url = url.replace(/HASH/, '#');
             if (match[1]) {
