@@ -133,7 +133,7 @@ function prerenderer(options) {
           console.log('renderURL failed: ', err);
           next();
         } else {
-          console.log('prerendered:' , content);
+          //console.log('prerendered:' , content);
           headers['content-length'] = Buffer.byteLength(content);
           res.writeHead(200, headers);
           res.end(content);

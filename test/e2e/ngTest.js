@@ -1,6 +1,7 @@
 /* global browser: false */
 /* global element: false */
 /* global sleep: false */
+/* global input: false */
 
 describe('main e2e test for prerenderer', function() {
 
@@ -60,5 +61,20 @@ describe('main e2e test for prerenderer', function() {
     element('button').click();
     expect(element('div[id="ngtestid"]').attr('href')).toBe('a.txt#blue');
   });
+
+  it('should get /ngtest05.html', function() {
+    browser().navigateTo('/ngtest05.html');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is ');
+    input('thetext').enter('nice');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is nice');
+  });
+
+  it('should get prerendered /ngtest05.html', function() {
+    browser().navigateTo('/PRERENDER-ngtest05.html');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is ');
+    input('thetext').enter('nice');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is nice');
+  });
+
 
 });
