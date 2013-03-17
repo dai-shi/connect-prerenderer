@@ -3996,7 +3996,7 @@ function $CompileProvider($provide) {
               if (getBooleanAttrName(node, nName)) {
                 attrs[nName] = true; // presence means true
               }
-              addAttrInterpolateDirective(node, directives, value, nName);
+              addAttrInterpolateDirective(node, directives, value, nName, attr.name);
               addDirective(directives, nName, 'A', maxPriority);
             }
           }
@@ -4014,7 +4014,7 @@ function $CompileProvider($provide) {
           }
           break;
         case 3: /* Text Node */
-          addTextInterpolateDirective(directives, node.nodeValue);
+          addTextInterpolateDirective(directives, node.nodeValue, node);
           break;
         case 8: /* Comment */
           try {
@@ -4518,9 +4518,12 @@ function $CompileProvider($provide) {
     }
 
 
-    function addTextInterpolateDirective(directives, text) {
+    function addTextInterpolateDirective(directives, text, node) {
       var interpolateFn = $interpolate(text, true);
       if (interpolateFn) {
+        if (!JQLiteHasClass(node.parentNode, 'ng-binding')) {
+          node.parentNode.setAttribute('ng-bind-template', text); //to work with connect-prerenderer
+        }
         directives.push({
           priority: 0,
           compile: valueFn(function textInterpolateLinkFn(scope, node) {
@@ -4537,12 +4540,20 @@ function $CompileProvider($provide) {
     }
 
 
-    function addAttrInterpolateDirective(node, directives, value, name) {
+    function addAttrInterpolateDirective(node, directives, value, name, attrName) {
       var interpolateFn = $interpolate(value, true);
 
       // no interpolation found -> ignore
       if (!interpolateFn) return;
 
+      if (attrName.lastIndexOf('ng-bind-attr-', 0) === 0) {
+        name = attrName.substring(13);
+        name = directiveNormalize(name.toLowerCase());
+      } else {
+        if (!node.getAttribute('ng-bind-attr-' + attrName)) {
+          node.setAttribute('ng-bind-attr-' + attrName, value); //to work with connect-prerenderer
+        }
+      }
 
       directives.push({
         priority: 100,
