@@ -11,8 +11,8 @@
             document.removeEventListener('click', arguments.callee, true);
             angular.bootstrap(document.body, []);
             return true;
-        }, true);
-          } else {
+          }, true);
+        } else {
           angular.bootstrap(document.body, []);
         }
       });
@@ -20,7 +20,11 @@
 
   </head>
   <body ng-app="">
-    <input name="textinput" ng-model="thetext" ng-init='thetext="ok"' />
-    <div id="ngtestid">it is {{thetext}}</div>
+    <button ng-init="l = [{text: 'default'}]" ng-click="l = [{text: 'abc'}, {text: 'def'}]">input</button>
+    <div id="ngtestid">
+      <div ng-repeat="x in l">
+        <p>{{x.text}}</p>
+      </div>
+    </div>
   </body>
 </html>

@@ -64,16 +64,32 @@ describe('main e2e test for prerenderer', function() {
 
   it('should get /ngtest05.html', function() {
     browser().navigateTo('/ngtest05.html');
-    expect(element('div[id="ngtestid"]').text()).toBe('it is ');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is ok');
     input('thetext').enter('nice');
     expect(element('div[id="ngtestid"]').text()).toBe('it is nice');
   });
 
   it('should get prerendered /ngtest05.html', function() {
     browser().navigateTo('/PRERENDER-ngtest05.html');
-    expect(element('div[id="ngtestid"]').text()).toBe('it is ');
+    expect(element('div[id="ngtestid"]').text()).toBe('it is ok');
     input('thetext').enter('nice');
     expect(element('div[id="ngtestid"]').text()).toBe('it is nice');
+  });
+
+  it('should get /ngtest06.html', function() {
+    browser().navigateTo('/ngtest06.html');
+    expect(element('div[id="ngtestid"]').text()).toContain('default');
+    element('button').click();
+    expect(element('div[id="ngtestid"]').text()).toContain('abc');
+    expect(element('div[id="ngtestid"]').text()).toContain('def');
+  });
+
+  it('should get prerendered /ngtest06.html', function() {
+    browser().navigateTo('/PRERENDER-ngtest06.html');
+    expect(element('div[id="ngtestid"]').text()).toContain('default');
+    element('button').click();
+    expect(element('div[id="ngtestid"]').text()).toContain('abc');
+    expect(element('div[id="ngtestid"]').text()).toContain('def');
   });
 
 

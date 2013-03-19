@@ -1,11 +1,26 @@
 <!doctype html>
-<html ng-app class="ng-app">
+<html>
   <head>
     <script src="json2.js"></script>
     <script src="angular.js"></script>
     <script src="controllers01.js"></script>
+
+    <script>
+      angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+          document.addEventListener('click', function() {
+            document.removeEventListener('click', arguments.callee, true);
+            angular.bootstrap(document.body, []);
+            return true;
+          }, true);
+        } else {
+          angular.bootstrap(document.body, []);
+        }
+      });
+    </script>
+
   </head>
-  <body ng-controller="TestController">
+  <body ng-app="" ng-controller="TestController">
     <div id="ngtestid">{{data.b}}</div>
   </body>
 </html>
