@@ -25,18 +25,49 @@ Options
   * targetReplacer: an internal function used in the default targetGenerator.
 * timeout: an integer in milliseconds to specify how long it watis to prerender.
 
+By default, it will check "/PRERENDER-" prefix which will be removed,
+and replace "HASH-" to "#/" and all "-"s to "/"s to make
+a target URL.
+
 Coding conventions (client-side)
 --------------------------------
 
 * If an html is prerendered, the body is like: `<body data-prerendered="true">`
 * When JavaScript code finishes prerendering, it should call: `document.onprerendered()`
 
+Notes for AngularJS
+-------------------
+
+The following snippet would help AngularJS to work:
+
+    <script>
+      angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+          document.addEventListener('click', function() {
+            document.removeEventListener('click', arguments.callee, true);
+            angular.bootstrap(document.body, []);
+            return true;
+          }, true);
+        } else {
+          angular.bootstrap(document.body, []);
+        }
+      });
+    </script>
+
+To keep templates for interpolation in a prerendered html,
+use the modified version of `angular.js` located in test/server/public/.
+
 Limitations
 -----------
 
 * Cookies are only passed to 127.0.0.1.
+* `style` attributes are note preserved by jsdom (only use `class`).
+
+AngularJS only limitations:
+
+* `ng-repeat` doesn't work well if it is prerendered. (looking for a workaround)
 
 TODOs
 -----
 
-(No more ongoing issues. Please file it if you have one.)
+* test case using `ng-view`
