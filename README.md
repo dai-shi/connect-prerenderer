@@ -61,7 +61,7 @@ Limitations
 -----------
 
 * Cookies are only passed to 127.0.0.1.
-* `style` attributes are note preserved by jsdom (only use `class`).
+* `style` attributes are not preserved by jsdom (use `class` only).
 
 AngularJS only limitations:
 
