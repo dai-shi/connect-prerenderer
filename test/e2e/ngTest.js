@@ -92,5 +92,27 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="ngtestid"]').text()).toContain('def');
   });
 
+  it('should get /ngtest07.html', function() {
+    browser().navigateTo('/ngtest07.html');
+    expect(element('div[class="ngtestclass"]').text()).toBe('part01');
+    element('a').click();
+    sleep(1);
+    expect(element('div[class="ngtestclass"]').text()).toBe('part02');
+    element('a').click();
+    sleep(1);
+    expect(element('div[class="ngtestclass"]').text()).toBe('part01');
+  });
+
+  it('should get prerendered /ngtest07.html', function() {
+    browser().navigateTo('/PRERENDER-ngtest07.html');
+    expect(element('div[class="ngtestclass"]').text()).toBe('part01');
+    element('a').click();
+    sleep(1);
+    expect(element('div[class="ngtestclass"]').text()).toBe('part02');
+    element('a').click();
+    sleep(1);
+    expect(element('div[class="ngtestclass"]').text()).toBe('part01');
+  });
+
 
 });
