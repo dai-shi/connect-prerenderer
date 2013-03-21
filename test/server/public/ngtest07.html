@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="json2.js"></script>
+    <script src="angular.js"></script>
+
+    <script>
+      angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+          document.addEventListener('click', function() {
+            document.removeEventListener('click', arguments.callee, true);
+            angular.bootstrap(document.body, ['mymodule']);
+            return true;
+          }, true);
+        } else {
+          angular.bootstrap(document.body, ['mymodule']);
+        }
+      });
+
+      angular.module('mymodule', []).
+      config(['$routeProvider', function($routeProvider) {
+        $routeProvider.
+        when('/partial01', {templateUrl: 'partial01.html'}).
+        when('/partial02', {templateUrl: 'partial02.html'}).
+        otherwise({templateUrl: 'partial01.html'});
+        //otherwise({redirectTo: '/partial01'}); //fails with jsdom
+      }]);
+    </script>
+
+  </head>
+  <body ng-app="mymodule" class="ng-app:mymodule">
+    <div ng-view></div>
+  </body>
+</html>
