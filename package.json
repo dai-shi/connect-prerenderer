@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "testacular": "*",
+    "karma": "*",
     "express": "*"
   },
   "repository": {

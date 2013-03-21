@@ -5,6 +5,6 @@
 node ./test/server/app.js &
 PID=$!
 
-./node_modules/testacular/bin/testacular start ./test/testacular.conf
+./node_modules/karma/bin/karma start ./test/e2e.conf
 
 kill $PID
