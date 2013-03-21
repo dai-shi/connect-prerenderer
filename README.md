@@ -70,4 +70,4 @@ AngularJS only limitations:
 TODOs
 -----
 
-* test case using `ng-view`
+* a workaround for `ng-repeat`
