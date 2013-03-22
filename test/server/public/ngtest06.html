@@ -5,6 +5,7 @@
     <script src="angular.js"></script>
 
     <script>
+      /* this doesn't work with karma
       angular.element(document).ready(function() {
         if (document.body.getAttribute('data-prerendered')) {
           document.addEventListener('click', function() {
@@ -16,11 +17,12 @@
           angular.bootstrap(document.body, []);
         }
       });
+      */
     </script>
 
   </head>
   <body ng-app="">
-    <button ng-init="l = [{text: 'default'}]" ng-click="l = [{text: 'abc'}, {text: 'def'}]">input</button>
+    <button ng-init="l = [{text: 'default1'}, {text: 'default2'}, {text: 'default3'}]" ng-click="l = [{text: 'abc'}, {text: 'def'}]">input</button>
     <div id="ngtestid">
       <div ng-repeat="x in l">
         <p>{{x.text}}</p>

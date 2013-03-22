@@ -3889,6 +3889,47 @@ function $CompileProvider($provide) {
      * @returns {?function} A composite linking function of all of the matched directives or null.
      */
     function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority) {
+      function removePrerenderedNgRepeatNodes(nodeList) {
+        var newNodeList = [];
+        var delNodeList = [];
+        var nodeListLength = nodeList.length;
+        var ngRepeatMatchValue;
+        var ngRepeatMatchIndex;
+        var i, node;
+        for(i = 0; i < nodeListLength; i++) {
+          node = nodeList[i];
+          var nodeType = node.nodeType;
+          if (nodeType === 8) {
+            var match = /^ ngRepeat: (.*) $/.exec(node.nodeValue);
+            if (match) {
+              ngRepeatMatchValue = match[1];
+              ngRepeatMatchIndex = i;
+            }
+            newNodeList.push(node);
+          } else if (nodeType === 1) {
+            if (ngRepeatMatchValue && ngRepeatMatchValue === node.getAttribute('ng-repeat')) {
+              if (i === ngRepeatMatchIndex + 1) {
+                newNodeList.push(node);
+              } else {
+                delNodeList.push(node);
+              }
+            } else {
+              ngRepeatMatchValue = null;
+              newNodeList.push(node);
+            }
+          } else {
+            newNodeList.push(node);
+          }
+        }
+        for (i = 0; i < delNodeList.length; i++) {
+          node = delNodeList[i];
+          if (node.parentNode) {
+            node.parentNode.removeChild(node);
+          }
+        }
+        return newNodeList;
+      }
+      nodeList = removePrerenderedNgRepeatNodes(nodeList);
       var linkFns = [],
           nodeLinkFn, childLinkFn, directives, attrs, linkFnFound;
 

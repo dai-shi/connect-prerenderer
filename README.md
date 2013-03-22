@@ -65,9 +65,9 @@ Limitations
 
 AngularJS only limitations:
 
-* `ng-repeat` doesn't work well if it is prerendered. (looking for a workaround)
+* `ng-repeat` workaround only works with `ng-repeat` attributes.
 
 TODOs
 -----
 
-* a workaround for `ng-repeat`
+* more complex examples.

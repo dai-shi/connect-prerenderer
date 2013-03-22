@@ -78,16 +78,24 @@ describe('main e2e test for prerenderer', function() {
 
   it('should get /ngtest06.html', function() {
     browser().navigateTo('/ngtest06.html');
-    expect(element('div[id="ngtestid"]').text()).toContain('default');
+    expect(element('p').count()).toBe(3);
+    expect(element('div[id="ngtestid"]').text()).toContain('default1');
+    expect(element('div[id="ngtestid"]').text()).toContain('default2');
+    expect(element('div[id="ngtestid"]').text()).toContain('default3');
     element('button').click();
+    expect(element('p').count()).toBe(2);
     expect(element('div[id="ngtestid"]').text()).toContain('abc');
     expect(element('div[id="ngtestid"]').text()).toContain('def');
   });
 
   it('should get prerendered /ngtest06.html', function() {
     browser().navigateTo('/PRERENDER-ngtest06.html');
-    expect(element('div[id="ngtestid"]').text()).toContain('default');
+    expect(element('p').count()).toBe(3);
+    expect(element('div[id="ngtestid"]').text()).toContain('default1');
+    expect(element('div[id="ngtestid"]').text()).toContain('default2');
+    expect(element('div[id="ngtestid"]').text()).toContain('default3');
     element('button').click();
+    expect(element('p').count()).toBe(2);
     expect(element('div[id="ngtestid"]').text()).toContain('abc');
     expect(element('div[id="ngtestid"]').text()).toContain('def');
   });
