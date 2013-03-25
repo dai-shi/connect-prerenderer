@@ -3890,13 +3890,10 @@ function $CompileProvider($provide) {
      */
     function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority) {
       function removePrerenderedNgRepeatNodes(nodeList) {
-        var newNodeList = [];
-        var delNodeList = [];
-        var nodeListLength = nodeList.length;
         var ngRepeatMatchValue;
         var ngRepeatMatchIndex;
         var i, node;
-        for(i = 0; i < nodeListLength; i++) {
+        for(i = 0; i < nodeList.length; i++) {
           node = nodeList[i];
           var nodeType = node.nodeType;
           if (nodeType === 8) {
@@ -3905,31 +3902,20 @@ function $CompileProvider($provide) {
               ngRepeatMatchValue = match[1];
               ngRepeatMatchIndex = i;
             }
-            newNodeList.push(node);
           } else if (nodeType === 1) {
             if (ngRepeatMatchValue && ngRepeatMatchValue === node.getAttribute('ng-repeat')) {
-              if (i === ngRepeatMatchIndex + 1) {
-                newNodeList.push(node);
-              } else {
-                delNodeList.push(node);
+              if (i !== ngRepeatMatchIndex + 1) {
+                node.parentNode.removeChild(node);
+                i--;
+                ngRepeatMatchIndex--;
               }
             } else {
               ngRepeatMatchValue = null;
-              newNodeList.push(node);
             }
-          } else {
-            newNodeList.push(node);
           }
         }
-        for (i = 0; i < delNodeList.length; i++) {
-          node = delNodeList[i];
-          if (node.parentNode) {
-            node.parentNode.removeChild(node);
-          }
-        }
-        return newNodeList;
       }
-      nodeList = removePrerenderedNgRepeatNodes(nodeList);
+      removePrerenderedNgRepeatNodes(nodeList);
       var linkFns = [],
           nodeLinkFn, childLinkFn, directives, attrs, linkFnFound;
 
