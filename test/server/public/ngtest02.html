@@ -5,23 +5,22 @@
     <script src="angular.js"></script>
 
     <script>
-      /* this doesn't work with karma
       angular.element(document).ready(function() {
         if (document.body.getAttribute('data-prerendered')) {
           document.addEventListener('click', function() {
             document.removeEventListener('click', arguments.callee, true);
-            angular.bootstrap(document.body, []);
+            angular.bootstrap(document.body);
             return true;
           }, true);
         } else {
-          angular.bootstrap(document.body, []);
+          angular.bootstrap(document.body);
+          document.body.className = document.body.className + ' ng-app';
         }
       });
-      */
     </script>
 
   </head>
-  <body ng-app="">
+  <body>
     <button id="testbtn" ng-click="hide_that=true">hide foo</button>
     <div id="ngtestid" ng-hide="hide_that">foo</div>
   </body>

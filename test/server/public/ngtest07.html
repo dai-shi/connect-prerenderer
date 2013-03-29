@@ -5,7 +5,7 @@
     <script src="angular.js"></script>
 
     <script>
-      /*
+      /* doesn't work with karma
       angular.element(document).ready(function() {
         if (document.body.getAttribute('data-prerendered')) {
           document.addEventListener('click', function() {
@@ -30,7 +30,7 @@
     </script>
 
   </head>
-  <body ng-app="mymodule" class="ng-app:mymodule">
+  <body ng-app="mymodule">
     <div ng-view></div>
   </body>
 </html>
