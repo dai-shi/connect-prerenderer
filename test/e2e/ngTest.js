@@ -3,7 +3,7 @@
 /* global sleep: false */
 /* global input: false */
 
-describe('main e2e test for prerenderer', function() {
+describe('angular basic e2e test for prerenderer', function() {
 
   it('should get /ngtest01.html', function() {
     browser().navigateTo('/ngtest01.html');

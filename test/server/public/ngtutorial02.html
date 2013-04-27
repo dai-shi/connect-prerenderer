@@ -1,0 +1,37 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Google Phone Gallery</title>
+    <link rel="stylesheet" href="//angular.github.io/angular-phonecat/step-2/app/css/app.css">
+    <link rel="stylesheet" href="//angular.github.io/angular-phonecat/step-2/app/css/bootstrap.css">
+    <script src="../angular.js"></script>
+    <script src="../ngtutorial02.js"></script>
+  </head>
+  <body ng-controller="PhoneListCtrl">
+    the first phone is {{phones[0].name + ' ' + phones[0].snippet}}
+    <ul>
+      <li ng-repeat="phone in phones">
+      {{phone.name}}
+      <p>{{phone.snippet}}</p>
+      </li>
+    </ul>
+    <script>
+      angular.element(document).ready(function() {
+        console.log('-----------ready-----------');
+        if (document.body.getAttribute('data-prerendered')) {
+           document.addEventListener('click', function() {
+             document.removeEventListener('click', arguments.callee, true);
+             console.log('-----------bootstraping-----------');
+             angular.bootstrap(document.body);
+             return true;
+           }, true);
+        } else {
+           console.log('-----------bootstraping2-----------');
+           angular.bootstrap(document.body);
+           document.body.className = document.body.className + ' ng-app';
+        }
+      });
+    </script>
+
+  </body>
+</html>

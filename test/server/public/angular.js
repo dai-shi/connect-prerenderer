@@ -4549,7 +4549,15 @@ function $CompileProvider($provide) {
       var interpolateFn = $interpolate(text, true);
       if (interpolateFn) {
         if (!JQLiteHasClass(node.parentNode, 'ng-binding')) {
-          node.parentNode.setAttribute('ng-bind-template', text); //to work with connect-prerenderer
+          //to work with connect-prerenderer
+          if (node.parentNode.childNodes.length == 1) {
+            node.parentNode.setAttribute('ng-bind-template', text);
+          } else {
+            var spanEle = document.createElement('span');
+            node.parentNode.insertBefore(spanEle, node);
+            node.parentNode.removeChild(node);
+            spanEle.appendChild(node);
+          }
         }
         directives.push({
           priority: 0,
