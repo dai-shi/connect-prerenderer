@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Google Phone Gallery</title>
+  <link rel="stylesheet" href="http://angular.github.io/angular-phonecat/step-6/app/css/app.css">
+  <link rel="stylesheet" href="http://angular.github.io/angular-phonecat/step-6/app/css/bootstrap.css">
+  <script src="../angular.js"></script>
+  <script src="http://angular.github.io/angular-phonecat/step-6/app/js/controllers.js"></script>
+</head>
+<body ng-controller="PhoneListCtrl">
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span2">
+        <!--Sidebar content-->
+
+        Search: <input ng-model="query">
+        Sort by:
+        <select ng-model="orderProp">
+          <option value="name">Alphabetical</option>
+          <option value="age">Newest</option>
+        </select>
+
+      </div>
+      <div class="span10">
+        <!--Body content-->
+
+        <ul class="phones">
+          <li ng-repeat="phone in phones | filter:query | orderBy:orderProp" class="thumbnail">
+            <a href="#/phones/{{phone.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>
+            <a href="#/phones/{{phone.id}}">{{phone.name}}</a>
+            <p>{{phone.snippet}}</p>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+ <script>
+    angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+            document.addEventListener('click', function() {
+                console.log('bootstrap 1');
+                document.removeEventListener('click', arguments.callee, true);
+                angular.bootstrap(document.body, []);
+                return true;
+            }, true);
+        } else {
+            console.log('bootstrap 2');
+            angular.bootstrap(document.body, []);
+        }
+    });
+</script>
+
+</body>
+</html>
