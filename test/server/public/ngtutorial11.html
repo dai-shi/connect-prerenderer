@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <title>Google Phone Gallery</title>
+  <link rel="stylesheet" href="//angular.github.io/angular-phonecat/step-11/app/css/app.css">
+  <link rel="stylesheet" href="//angular.github.io/angular-phonecat/step-11/app/css/bootstrap.css">
+  <script src="../angular.js"></script>
+  <script src="//angular.github.io/angular-phonecat/step-11/app/js/app.js"></script>
+  <script src="//angular.github.io/angular-phonecat/step-11/app/js/controllers.js"></script>
+  <script src="//angular.github.io/angular-phonecat/step-11/app/js/filters.js"></script>
+  <script src="//angular.github.io/angular-phonecat/step-11/app/js/services.js"></script>
+  <script src="../angular-resource.js"></script>
+</head>
+<body>
+  <div ng-view></div>
+  <script>
+    angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+            document.addEventListener('click', function() {
+                document.removeEventListener('click', arguments.callee, true);
+                angular.bootstrap(document.body, ['phonecat']);
+                return true;
+            }, true);
+        } else {
+            angular.bootstrap(document.body, ['phonecat']);
+        }
+    });
+  </script>
+</body>
+</html>
