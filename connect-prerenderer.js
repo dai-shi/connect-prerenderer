@@ -86,7 +86,7 @@ function renderURL(url, headers, timeout, callback) {
         var content;
         try {
           document.body.setAttribute('data-prerendered', 'true');
-          content = document.innerHTML;
+          content = document.doctype + document.innerHTML;
         } catch (err) {
           callback(err);
           return;
