@@ -19,8 +19,8 @@ In app.js:
 Options
 -------
 
-* urlChecker: a function to check if a url should be prerendered.
 * targetGenerator: a function to generate a new one for HTTP request.
+  * urlChecker: an internal function to check if a url should be prerendered.
   * targetPrefix: an internal string used in the default targetGenerator.
   * targetReplacer: an internal function used in the default targetGenerator.
 * timeout: an integer in milliseconds to specify how long it watis to prerender.

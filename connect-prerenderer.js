@@ -32,20 +32,29 @@ var URL = require('url');
 var request = require('request');
 var jsdom = require('jsdom');
 
-var prerenderURLPrefix = '/PRERENDER';
-var prerenderURLPrefixLengthPlusOne = prerenderURLPrefix.length + 1;
+var targetGeneratorMap = {
 
-function getTargetURL(req, options) {
-  options = options || {};
-  var urlChecker = options['urlChecker'] || function(url) {
-      return url.lastIndexOf(prerenderURLPrefix, 0) === 0 && url.length >= prerenderURLPrefixLengthPlusOne;
-    };
-  if (!urlChecker(req.url)) {
-    return null;
-  }
+  'googlebot': function(url, options, req) {
+    var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
+    var fragment = req.query['_escaped_fragment_'];
+    if (!fragment) {
+      return null;
+    }
+    url = url.replace(/[?&]_escaped_fragment_=[^&]+/, '');
+    return prefix + url + '#!' + fragment;
+  },
 
-  var targetGenerator = options['targetGenerator'] || function(url) {
+  'default': (function() {
+    var prerenderURLPrefix = '/PRERENDER';
+    var prerenderURLPrefixLengthPlusOne = prerenderURLPrefix.length + 1;
+    return function(url, options, req) {
       var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
+      var urlChecker = options['urlChecker'] || function(url) {
+          return url.lastIndexOf(prerenderURLPrefix, 0) === 0 && url.length >= prerenderURLPrefixLengthPlusOne;
+        };
+      if (!urlChecker(req.url)) {
+        return null;
+      }
       var replacer = options['targetReplacer'] || function(url) {
           url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
           var match = url.match(/HASH([-_\/:])?/);
@@ -61,7 +70,18 @@ function getTargetURL(req, options) {
       url = replacer(url);
       return prefix + url;
     };
-  return targetGenerator(req.url);
+  })()
+
+};
+
+function getTargetURL(req, options) {
+  options = options || {};
+
+  var targetGenerator = options['targetGenerator'];
+  if (typeof(targetGenerator) !== 'function') {
+    targetGenerator = targetGeneratorMap[targetGenerator] || targetGeneratorMap['default'];
+  }
+  return targetGenerator(req.url, options, req);
 }
 
 function renderURL(url, headers, timeout, callback) {
