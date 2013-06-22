@@ -24,8 +24,8 @@
         $routeProvider.
         when('/partial01', {templateUrl: 'partial01.html'}).
         when('/partial02', {templateUrl: 'partial02.html'}).
-        otherwise({templateUrl: 'partial01.html'});
-        //otherwise({redirectTo: '/partial01'}); //fails with jsdom
+        //otherwise({templateUrl: 'partial01.html'});
+        otherwise({redirectTo: '/partial01'}); //fails with jsdom
       }]);
     </script>
 
