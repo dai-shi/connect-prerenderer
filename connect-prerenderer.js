@@ -77,9 +77,9 @@ var targetGeneratorMap = {
 function getTargetURL(req, options) {
   options = options || {};
 
-  var targetGenerator = options['targetGenerator'] || 'default';
-  if (typeof(targetGenerator) !== 'function') {
-    targetGenerator = targetGeneratorMap[targetGenerator];
+  var targetGenerator = options['targetGenerator'];
+  if (typeof targetGenerator !== 'function') {
+    targetGenerator = targetGeneratorMap[targetGenerator] || targetGeneratorMap['default'];
   }
   return targetGenerator(req.url, options, req);
 }
