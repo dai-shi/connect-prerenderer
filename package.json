@@ -1,10 +1,10 @@
 {
   "name": "connect-prerenderer",
   "description": "Express/connect middleware to pre-render ajax page for non-ajax browsers, especially using angular.js",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": "Daishi Kato <daishi@axlight.com>",
   "dependencies": {
-    "jsdom": "git://github.com/dai-shi/jsdom.git#3ddd762e2b",
+    "jsdom": "git://github.com/dai-shi/jsdom.git#7c65d4626e",
     "request": "~2.14.0"
   },
   "devDependencies": {

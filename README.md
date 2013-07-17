@@ -19,15 +19,13 @@ In app.js:
 Options
 -------
 
-* targetGenerator: a function to generate a new one for HTTP request.
-  * urlChecker: an internal function to check if a url should be prerendered.
-  * targetPrefix: an internal string used in the default targetGenerator.
-  * targetReplacer: an internal function used in the default targetGenerator.
+* targetGenerator: a name or a function to generate a new one for HTTP request.
+  * "default" --- check "/PRERENDER-" prefix which will be removed, and replace "HASH-" to "#/" and all "-"s to "/"s to make a target URL. (see the source code for more options.)
+  * "googlebot" --- follow <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
+  * a function that returns a target URL for prerendering or null.
 * timeout: an integer in milliseconds to specify how long it watis to prerender.
+* cookie\_domain: a domain name to allow passing cookies.
 
-By default, it will check "/PRERENDER-" prefix which will be removed,
-and replace "HASH-" to "#/" and all "-"s to "/"s to make
-a target URL.
 
 Coding conventions (client-side)
 --------------------------------
@@ -60,7 +58,6 @@ use the modified version of `angular.js` located in test/server/public/.
 Limitations
 -----------
 
-* Cookies are only passed to 127.0.0.1.
 * `style` attributes are not preserved by jsdom (use `class` only).
 
 AngularJS only limitations:

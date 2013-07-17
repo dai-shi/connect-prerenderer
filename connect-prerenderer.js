@@ -84,7 +84,9 @@ function getTargetURL(req, options) {
   return targetGenerator(req.url, options, req);
 }
 
-function renderURL(url, headers, timeout, callback) {
+function renderURL(url, headers, options, callback) {
+  var timeout = (options && options.timeout ? options.timeout : 5000);
+  var cookie_domain = options && options.cookie_domain;
   request({
     uri: URL.parse(url),
     headers: headers // we assume our target is secure and send all headers
@@ -120,6 +122,7 @@ function renderURL(url, headers, timeout, callback) {
         deferClose: true,
         url: url,
         cookie: headers.cookie,
+        cookie_domain: cookie_domain,
         features: {
           FetchExternalResources: ['script'],
           ProcessExternalResources: ['script']
@@ -142,10 +145,9 @@ function renderURL(url, headers, timeout, callback) {
 function prerenderer(options) {
   return function(req, res, next) {
     var url = getTargetURL(req, options);
-    var timeout = (options && options.timeout ? options.timeout : 5000);
     if (url) {
       //console.log('headers:', req.headers);
-      renderURL(url, req.headers, timeout, function(err, content, headers) {
+      renderURL(url, req.headers, options, function(err, content, headers) {
         if (typeof err === 'number') {
           res.statusCode = err;
           content = http.STATUS_CODES[err];
