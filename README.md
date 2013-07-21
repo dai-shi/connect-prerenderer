@@ -24,7 +24,7 @@ Options
   * "googlebot" --- follow <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
   * a function that returns a target URL for prerendering or null.
 * timeout: an integer in milliseconds to specify how long it watis to prerender.
-* cookie\_domain: a domain name to allow passing cookies.
+* cookieDomain: a domain name to allow passing cookies.
 
 
 Coding conventions (client-side)

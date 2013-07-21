@@ -86,7 +86,7 @@ function getTargetURL(req, options) {
 
 function renderURL(url, headers, options, callback) {
   var timeout = (options && options.timeout ? options.timeout : 5000);
-  var cookie_domain = options && options.cookie_domain;
+  var cookieDomain = options && options.cookieDomain;
   request({
     uri: URL.parse(url),
     headers: headers // we assume our target is secure and send all headers
@@ -122,7 +122,7 @@ function renderURL(url, headers, options, callback) {
         deferClose: true,
         url: url,
         cookie: headers.cookie,
-        cookie_domain: cookie_domain,
+        cookieDomain: cookieDomain,
         features: {
           FetchExternalResources: ['script'],
           ProcessExternalResources: ['script']
