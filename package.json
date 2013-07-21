@@ -8,9 +8,9 @@
     "request": "~2.14.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "karma": "*",
-    "express": "*"
+    "mocha": "~1.12.0",
+    "karma": "0.8.3",
+    "express": "~3.3.4"
   },
   "repository": {
     "type": "git",
