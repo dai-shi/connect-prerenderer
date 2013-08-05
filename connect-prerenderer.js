@@ -84,12 +84,22 @@ function getTargetURL(req, options) {
   return targetGenerator(req.url, options, req);
 }
 
+function filterHeaders(headers) {
+  var newHeaders = {};
+  for (var key in headers) {
+    if (key === 'host' || key === 'cookie' || key.lastIndexOf('accept', 0) === 0) {
+      newHeaders[key] = headers[key];
+    }
+  }
+  return newHeaders;
+}
+
 function renderURL(url, headers, options, callback) {
   var timeout = (options && options.timeout ? options.timeout : 5000);
   var cookieDomain = options && options.cookieDomain;
   request({
     uri: URL.parse(url),
-    headers: headers // we assume our target is secure and send all headers
+    headers: filterHeaders(headers)
   }, function(err, res, body) {
     if (err) {
       callback(err);
