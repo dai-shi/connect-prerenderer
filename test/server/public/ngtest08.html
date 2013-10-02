@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="json2.js"></script>
+    <script src="angular.js"></script>
+
+    <script>
+      angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+          document.addEventListener('click', function() {
+            document.removeEventListener('click', arguments.callee, true);
+            angular.bootstrap(document.body);
+            return true;
+        }, true);
+          } else {
+          angular.bootstrap(document.body);
+          document.body.className = document.body.className + ' ng-app';
+        }
+      });
+
+      function TestController($scope, $http) {
+        $http.get('/data.json').success(function(data) {
+        });
+        $http.get('/data.json').success(function(data) {
+          $scope.value1 = data.a;
+        });
+        $http.get('/data.json').success(function(data) {
+          $scope.value2 = data.b;
+        });
+      }
+      TestController.$inject = ['$scope', '$http'];
+    </script>
+
+  </head>
+  <body ng-controller="TestController">
+    <div id="ngtestid1">the a is {{value1}}</div>
+    <div id="ngtestid2">the b is {{value2}}</div>
+  </body>
+</html>

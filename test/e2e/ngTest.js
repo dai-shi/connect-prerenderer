@@ -122,5 +122,21 @@ describe('angular basic e2e test for prerenderer', function() {
     expect(element('div[class="ngtestclass"]').text()).toBe('part01');
   });
 
+  it('should get /ngtest08.html', function() {
+    browser().navigateTo('/ngtest08.html');
+    sleep(1);
+    expect(element('div[id="ngtestid1"]').text()).toContain('12345');
+    expect(element('div[id="ngtestid2"]').text()).toContain('22346');
+  });
+
+  it('should get prerendered /ngtest08.html', function() {
+    browser().navigateTo('/PRERENDER-ngtest08.html');
+    sleep(1);
+    expect(element('div[id="ngtestid1"]').text()).toContain('12345');
+    expect(element('div[id="ngtestid2"]').text()).toContain('22346');
+  });
+
+
+
 
 });
