@@ -10,7 +10,8 @@
   "devDependencies": {
     "express": "~3.4.0",
     "mocha": "~1.13.0",
-    "karma": "0.8.3"
+    "karma": "~0.10.2",
+    "karma-ng-scenario": "~0.1.0"
   },
   "repository": {
     "type": "git",

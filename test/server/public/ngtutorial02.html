@@ -22,12 +22,12 @@
            document.addEventListener('click', function() {
              document.removeEventListener('click', arguments.callee, true);
              console.log('-----------bootstraping-----------');
-             angular.bootstrap(document.body);
+             angular.bootstrap(document.body, []);
              return true;
            }, true);
         } else {
            console.log('-----------bootstraping2-----------');
-           angular.bootstrap(document.body);
+           angular.bootstrap(document.body, []);
            document.body.className = document.body.className + ' ng-app';
         }
       });
