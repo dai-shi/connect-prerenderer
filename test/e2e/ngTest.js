@@ -18,16 +18,22 @@ describe('angular basic e2e test for prerenderer', function() {
 
   it('should get /ngtest02.html', function() {
     browser().navigateTo('/ngtest02.html');
-    expect(element('div[id="ngtestid"]').css('display')).toBe('block');
-    element('button').click();
-    expect(element('div[id="ngtestid"]').css('display')).toBe('none');
+    expect(element('div[id="ngtestid1"]').css('display')).toBe('block');
+    element('button[id="testbtn1"]').click();
+    expect(element('div[id="ngtestid1"]').css('display')).toBe('none');
+    expect(element('div[id="ngtestid2"]').css('display')).toBe('none');
+    element('button[id="testbtn2"]').click();
+    expect(element('div[id="ngtestid2"]').css('display')).toBe('block');
   });
 
   it('should get prerendered /ngtest02.html', function() {
     browser().navigateTo('/PRERENDER-ngtest02.html');
-    expect(element('div[id="ngtestid"]').css('display')).toBe('block');
-    element('button').click();
-    expect(element('div[id="ngtestid"]').css('display')).toBe('none');
+    expect(element('div[id="ngtestid1"]').css('display')).toBe('block');
+    element('button[id="testbtn1"]').click();
+    expect(element('div[id="ngtestid1"]').css('display')).toBe('none');
+    expect(element('div[id="ngtestid2"]').css('display')).toBe('none');
+    element('button[id="testbtn2"]').click();
+    expect(element('div[id="ngtestid2"]').css('display')).toBe('block');
   });
 
   it('should get /ngtest03.html', function() {
