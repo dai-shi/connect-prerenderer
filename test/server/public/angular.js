@@ -4127,6 +4127,33 @@ function $CompileProvider($provide) {
      * @returns {?function} A composite linking function of all of the matched directives or null.
      */
     function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority) {
+      function removePrerenderedNgRepeatNodes(nodeList) {
+        var ngRepeatMatchValue;
+        var ngRepeatMatchIndex;
+        var i, node;
+        for(i = 0; i < nodeList.length; i++) {
+          node = nodeList[i];
+          var nodeType = node.nodeType;
+          if (nodeType === 8) {
+            var match = /^ ngRepeat: (.*) $/.exec(node.nodeValue);
+            if (match) {
+              ngRepeatMatchValue = match[1];
+              ngRepeatMatchIndex = i;
+            }
+          } else if (nodeType === 1) {
+            if (ngRepeatMatchValue && ngRepeatMatchValue === node.getAttribute('ng-repeat')) {
+              if (i !== ngRepeatMatchIndex + 1) {
+                node.parentNode.removeChild(node);
+                i--;
+                ngRepeatMatchIndex--;
+              }
+            } else {
+              ngRepeatMatchValue = null;
+            }
+          }
+        }
+      }
+      removePrerenderedNgRepeatNodes(nodeList);
       var linkFns = [],
           nodeLinkFn, childLinkFn, directives, attrs, linkFnFound;
 
@@ -4234,7 +4261,7 @@ function $CompileProvider($provide) {
               if (getBooleanAttrName(node, nName)) {
                 attrs[nName] = true; // presence means true
               }
-              addAttrInterpolateDirective(node, directives, value, nName);
+              addAttrInterpolateDirective(node, directives, value, nName, attr.name);
               addDirective(directives, nName, 'A', maxPriority);
             }
           }
@@ -4252,7 +4279,7 @@ function $CompileProvider($provide) {
           }
           break;
         case 3: /* Text Node */
-          addTextInterpolateDirective(directives, node.nodeValue);
+          addTextInterpolateDirective(directives, node.nodeValue, node);
           break;
         case 8: /* Comment */
           try {
@@ -4756,9 +4783,20 @@ function $CompileProvider($provide) {
     }
 
 
-    function addTextInterpolateDirective(directives, text) {
+    function addTextInterpolateDirective(directives, text, node) {
       var interpolateFn = $interpolate(text, true);
       if (interpolateFn) {
+        if (!JQLiteHasClass(node.parentNode, 'ng-binding')) {
+          //to work with connect-prerenderer
+          if (node.parentNode.childNodes.length == 1) {
+            node.parentNode.setAttribute('ng-bind-template', text);
+          } else {
+            var spanEle = document.createElement('span');
+            node.parentNode.insertBefore(spanEle, node);
+            node.parentNode.removeChild(node);
+            spanEle.appendChild(node);
+          }
+        }
         directives.push({
           priority: 0,
           compile: valueFn(function textInterpolateLinkFn(scope, node) {
@@ -4775,12 +4813,20 @@ function $CompileProvider($provide) {
     }
 
 
-    function addAttrInterpolateDirective(node, directives, value, name) {
+    function addAttrInterpolateDirective(node, directives, value, name, attrName) {
       var interpolateFn = $interpolate(value, true);
 
       // no interpolation found -> ignore
       if (!interpolateFn) return;
 
+      if (attrName.lastIndexOf('ng-bind-attr-', 0) === 0) {
+        name = attrName.substring(13);
+        name = directiveNormalize(name.toLowerCase());
+      } else {
+        if (!node.getAttribute('ng-bind-attr-' + attrName)) {
+          node.setAttribute('ng-bind-attr-' + attrName, value); //to work with connect-prerenderer
+        }
+      }
 
       directives.push({
         priority: 100,
