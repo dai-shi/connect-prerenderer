@@ -21,4 +21,4 @@ app.get('/data.json', function(req, res) {
 });
 
 
-app.listen(5050);
+app.listen(process.env.PORT || 5050);
