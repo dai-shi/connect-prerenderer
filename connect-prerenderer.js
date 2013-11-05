@@ -56,12 +56,12 @@ var targetGeneratorMap = {
       }
       var replacer = options['targetReplacer'] || function(url) {
           url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
-          var match = url.match(/HASH([-_\/:])?/);
+          var match = url.match(/HASH([-_:;|*+])?/);
           if (match) {
             url = url.replace(/HASH/, '#');
             if (match[1]) {
               var hex = match[1].charCodeAt().toString(16);
-              url = url.replace(new RegExp('\\x' + hex), '/');
+              url = url.replace(new RegExp('\\x' + hex, 'g'), '/');
             }
           }
           return url;
