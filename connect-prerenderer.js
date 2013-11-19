@@ -30,16 +30,17 @@ var http = require('http');
 var URL = require('url');
 var request = require('request');
 var jsdom = require('jsdom');
+var urlLib = require('url');
 
 var targetGeneratorMap = {
 
   'googlebot': function(url, options, req) {
     var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
-    var fragment = req.query['_escaped_fragment_'];
-    if (!fragment) {
+    var fragment = urlLib.parse(url, true).query['_escaped_fragment_'];
+    if (!fragment && fragment !== '') {
       return null;
     }
-    url = url.replace(/[?&]_escaped_fragment_=[^&]+/, '');
+    url = url.replace(/[?&]_escaped_fragment_=[^&]*/, '');
     return prefix + url + '#!' + fragment;
   },
 
