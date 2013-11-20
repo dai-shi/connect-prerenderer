@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>hashbang test</title>
+  </head>
+  <body>
+    hello <p id="myname" />
+    <script>
+      var myname = location.hash;
+      if (/^#!\w*/.exec(myname)) {
+        myname = myname.substring(2) + ' user';
+      } else {
+        myname = 'world';
+      }
+      document.getElementById('myname').innerHTML = myname;
+    </script>
+  </body>
+</html>
