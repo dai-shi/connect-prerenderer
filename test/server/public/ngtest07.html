@@ -1,35 +1,37 @@
 <!doctype html>
-<html>
+<html ng-app="mymodule">
   <head>
     <script src="json2.js"></script>
     <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
 
     <script>
-      /* doesn't work with karma
-      angular.element(document).ready(function() {
-        if (document.body.getAttribute('data-prerendered')) {
-          document.addEventListener('click', function() {
-            document.removeEventListener('click', arguments.callee, true);
-            angular.bootstrap(document.body, ['mymodule']);
-            return true;
-          }, true);
-        } else {
-          angular.bootstrap(document.body, ['mymodule']);
-        }
-      });
-      */
-
-      angular.module('mymodule', []).
+      angular.module('mymodule', ['ngRoute']).
       config(['$routeProvider', function($routeProvider) {
         $routeProvider.
         when('/partial01', {templateUrl: 'partial01.html'}).
         when('/partial02', {templateUrl: 'partial02.html'}).
         otherwise({redirectTo: '/partial01'});
       }]);
+
+      /* this does not work with karma
+      angular.element(document).ready(function() {
+        if (document.body.getAttribute('data-prerendered')) {
+          document.addEventListener('click', function() {
+            document.removeEventListener('click', arguments.callee, true);
+            angular.bootstrap(document.documentElement, ['mymodule']);
+            return true;
+          }, true);
+        } else {
+          angular.bootstrap(document.documentElement, ['mymodule']);
+          document.documentElement.className = document.documentElement.className + ' ng-app:mymodule';
+        }
+      });
+      */
     </script>
 
   </head>
-  <body ng-app="mymodule">
+  <body>
     <div ng-view></div>
   </body>
 </html>

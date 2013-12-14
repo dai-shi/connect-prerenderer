@@ -10,12 +10,12 @@
         if (document.body.getAttribute('data-prerendered')) {
           document.addEventListener('click', function() {
             document.removeEventListener('click', arguments.callee, true);
-            angular.bootstrap(document.body, []);
+            angular.bootstrap(document.documentElement, []);
             return true;
           }, true);
         } else {
-          angular.bootstrap(document.body, []);
-          document.body.className = document.body.className + ' ng-app';
+          angular.bootstrap(document.documentElement, []);
+          document.documentElement.className = document.documentElement.className + ' ng-app';
         }
       });
     </script>

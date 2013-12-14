@@ -43,28 +43,25 @@ The following snippet would help AngularJS to work:
         if (document.body.getAttribute('data-prerendered')) {
           document.addEventListener('click', function() {
             document.removeEventListener('click', arguments.callee, true);
-            angular.bootstrap(document.body, []);
+            angular.bootstrap(document.documentElement, []);
             return true;
           }, true);
         } else {
-          angular.bootstrap(document.body, []);
+          angular.bootstrap(document.documentElement, []);
         }
       });
     </script>
 
 To keep templates for interpolation in a prerendered html,
-use the modified version of `angular.js` located in test/server/public/.
+use the modified version of `angular.js` (v1.2.5)
+located in `test/server/public/`.
 
 Limitations
 -----------
 
-* `style` attributes are not preserved by jsdom (use `class` only).
+* `style` attributes are not preserved by jsdom (use `class`).
 
 AngularJS only limitations:
 
 * `ng-repeat` workaround only works with `ng-repeat` attributes.
-
-TODOs
------
-
-* more complex examples.
+* `ng-repeat-(start|end)` is not supported.

@@ -24,7 +24,7 @@
   ],
   "main": "./connect-prerenderer.js",
   "scripts": {
-    "test": "./runTest.sh"
+    "test": "NODE_ENV=test ./runTest.sh"
   },
   "license": "BSD",
   "engines": {

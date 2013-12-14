@@ -3,7 +3,9 @@ var prerenderer = require('../../connect-prerenderer.js');
 
 var app = express();
 
-app.use(express.logger());
+app.configure('development', function() {
+  app.use(express.logger());
+});
 app.use(express.cookieParser());
 app.use(prerenderer());
 app.use(express.static(__dirname + '/public'));
@@ -32,7 +34,9 @@ app.listen(process.env.PORT || 5050);
  */
 var app2 = express();
 
-app2.use(express.logger());
+app2.configure('development', function() {
+  app2.use(express.logger());
+});
 app2.use(express.cookieParser());
 app2.use(prerenderer({
   targetGenerator: 'googlebot'
