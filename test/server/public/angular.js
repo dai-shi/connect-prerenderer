@@ -5655,6 +5655,33 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
      */
     function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority, ignoreDirective,
                             previousCompileContext) {
+      function removePrerenderedNgRepeatNodes(nodeList) {
+        var ngRepeatMatchValue;
+        var ngRepeatMatchIndex;
+        var i, node;
+        for(i = 0; i < nodeList.length; i++) {
+          node = nodeList[i];
+          var nodeType = node.nodeType;
+          if (nodeType === 8) {
+            var match = /^ ngRepeat: (.*) $/.exec(node.nodeValue);
+            if (match) {
+              ngRepeatMatchValue = match[1];
+              ngRepeatMatchIndex = i;
+            }
+          } else if (nodeType === 1) {
+            if (ngRepeatMatchValue && ngRepeatMatchValue === node.getAttribute('ng-repeat')) {
+              if (i !== ngRepeatMatchIndex + 1) {
+                node.parentNode.removeChild(node);
+                i--;
+                ngRepeatMatchIndex--;
+              }
+            } else {
+              ngRepeatMatchValue = null;
+            }
+          }
+        }
+      }
+      removePrerenderedNgRepeatNodes(nodeList);
       var linkFns = [],
           attrs, directives, nodeLinkFn, childNodes, childLinkFn, linkFnFound;
 
@@ -5796,7 +5823,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               if (getBooleanAttrName(node, nName)) {
                 attrs[nName] = true; // presence means true
               }
-              addAttrInterpolateDirective(node, directives, value, nName);
+              addAttrInterpolateDirective(node, directives, value, nName, attr.name);
               addDirective(directives, nName, 'A', maxPriority, ignoreDirective, attrStartName,
                             attrEndName);
             }
@@ -5815,7 +5842,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           }
           break;
         case 3: /* Text Node */
-          addTextInterpolateDirective(directives, node.nodeValue);
+          addTextInterpolateDirective(directives, node.nodeValue, node);
           break;
         case 8: /* Comment */
           try {
@@ -6570,9 +6597,20 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
     }
 
 
-    function addTextInterpolateDirective(directives, text) {
+    function addTextInterpolateDirective(directives, text, node) {
       var interpolateFn = $interpolate(text, true);
       if (interpolateFn) {
+        if (!jqLiteHasClass(node.parentNode, 'ng-binding')) {
+          //to work with connect-prerenderer
+          if (node.parentNode.childNodes.length == 1) {
+            node.parentNode.setAttribute('ng-bind-template', text);
+          } else {
+            var spanEle = document.createElement('span');
+            node.parentNode.insertBefore(spanEle, node);
+            node.parentNode.removeChild(node);
+            spanEle.appendChild(node);
+          }
+        }
         directives.push({
           priority: 0,
           compile: valueFn(function textInterpolateLinkFn(scope, node) {
@@ -6604,12 +6642,22 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
     }
 
 
-    function addAttrInterpolateDirective(node, directives, value, name) {
+    function addAttrInterpolateDirective(node, directives, value, name, attrName) {
       var interpolateFn = $interpolate(value, true);
 
       // no interpolation found -> ignore
       if (!interpolateFn) return;
 
+      var origAttrValue;
+      if (attrName.lastIndexOf('ng-bind-attr-', 0) === 0) {
+        name = attrName.substring(13);
+        name = directiveNormalize(name.toLowerCase());
+        origAttrValue = value;
+      } else {
+        if (!node.getAttribute('ng-bind-attr-' + attrName)) {
+          node.setAttribute('ng-bind-attr-' + attrName, value); //to work with connect-prerenderer
+        }
+      }
 
       if (name === "multiple" && nodeName_(node) === "SELECT") {
         throw $compileMinErr("selmulti",
@@ -6632,7 +6680,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
                 // we need to interpolate again, in case the attribute value has been updated
                 // (e.g. by another directive's compile function)
-                interpolateFn = $interpolate(attr[name], true, getTrustedContext(node, name));
+                interpolateFn = $interpolate(origAttrValue || attr[name], true, getTrustedContext(node, name));
 
                 // if attribute was updated so that there is no interpolation going on we don't want to
                 // register any observers
