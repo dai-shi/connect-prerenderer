@@ -86,7 +86,8 @@ function getTargetURL(req, options) {
 function filterHeaders(headers) {
   var newHeaders = {};
   for (var key in headers) {
-    if (key === 'host' || key === 'cookie' || key.lastIndexOf('accept', 0) === 0) {
+    if (key === 'host' || key === 'cookie' ||
+      (key.lastIndexOf('accept', 0) === 0 && key !== 'accept-encoding')) {
       newHeaders[key] = headers[key];
     }
   }
@@ -137,6 +138,9 @@ function renderURL(url, headers, options, callback) {
           ProcessExternalResources: ['script']
         }
       });
+      if (options && options.attachConsole) {
+        document.parentWindow.console = console;
+      }
       document.onprerendered = done;
       document.write(body);
       document.close();

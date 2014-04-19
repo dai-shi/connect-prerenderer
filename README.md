@@ -25,6 +25,8 @@ Options
   * a function that returns a target URL for prerendering or null.
 * timeout: an integer in milliseconds to specify how long it watis to prerender.
 * cookieDomain: a domain name to allow passing cookies.
+* attachConsole: when truthy, attach `global.console` to `window.console` when prerendering files
+  (useful for debugging)
 
 
 Coding conventions (client-side)
