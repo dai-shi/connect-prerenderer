@@ -4,7 +4,7 @@
   "version": "0.6.2",
   "author": "Daishi Kato <daishi@axlight.com>",
   "dependencies": {
-    "jsdom": "0.8.1",
+    "jsdom": "~0.10.5",
     "request": "~2.14.0"
   },
   "devDependencies": {
