@@ -1,6 +1,8 @@
 connect-prerenderer
 ===================
 
+[![Build Status](https://travis-ci.org/dai-shi/connect-prerenderer.png?branch=master)](https://travis-ci.org/dai-shi/connect-prerenderer)
+
 Express/connect middleware to pre-render ajax page for non-ajax browsers, especially using angular.js
 
 How to use
