@@ -29,6 +29,12 @@ describe('main e2e test for prerenderer', function() {
     expect(element('div[id="id001"]').text()).toBe('simple1');
   });
 
+  it('prerendered html shouldn\'t have \'null\' in place of the doctype',
+    function() {
+    browser().navigateTo('/PRERENDER/simpledom.html');
+    expect(element('body').html()).not().toMatch(/^null/);
+  });
+
   it('should get prerendered /simplejs.html', function() {
     browser().navigateTo('/PRERENDER-simplejs.html');
     expect(element('div[id="id002"]').text()).toBe('simple2');

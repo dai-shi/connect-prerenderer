@@ -118,7 +118,8 @@ function renderURL(url, headers, options, callback) {
         var content;
         try {
           document.body.setAttribute('data-prerendered', 'true');
-          content = document.doctype + document.innerHTML;
+          content = [document.doctype, document.innerHTML]
+            .filter(function (val) { return val; }).join();
         } catch (err) {
           callback(err);
           return;
