@@ -25,7 +25,7 @@ Options
   * "default" --- check "/PRERENDER-" prefix which will be removed, and replace "HASH-" to "#/" and all "-"s to "/"s to make a target URL. (see the source code for more options.)
   * "googlebot" --- follow <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
   * a function that returns a target URL for prerendering or null.
-* timeout: an integer in milliseconds to specify how long it watis to prerender.
+* timeout: an integer in milliseconds to specify how long it waits to prerender.
 * cookieDomain: a domain name to allow passing cookies.
 * attachConsole: when truthy, attach `global.console` to `window.console` when prerendering files
   (useful for debugging)
