@@ -35,6 +35,12 @@ describe('main e2e test for prerenderer', function() {
     expect(element('body').html()).not().toMatch(/^null/);
   });
 
+  xit('prerendered html shouldn\'t have nested html tags', function() {
+    browser().navigateTo('/PRERENDER/simpledom.html');
+    // FIXME: the following line doesn't get the document correctly
+    expect(element('document').html()).not().toMatch(/<html>.*<html>/);
+  });
+
   it('should get prerendered /simplejs.html', function() {
     browser().navigateTo('/PRERENDER-simplejs.html');
     expect(element('div[id="id002"]').text()).toBe('simple2');

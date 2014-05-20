@@ -129,8 +129,7 @@ function renderURL(url, headers, options, callback) {
     };
     timer = setTimeout(done, timeout);
     try {
-      document = jsdom.jsdom('', null, {
-        deferClose: true,
+      document = jsdom.jsdom(body, null, {
         url: url,
         cookie: headers.cookie,
         cookieDomain: cookieDomain,
@@ -143,8 +142,6 @@ function renderURL(url, headers, options, callback) {
         document.parentWindow.console = console;
       }
       document.onprerendered = done;
-      document.write(body);
-      document.close();
     } catch (err) {
       if (timer) {
         clearTimeout(timer);
