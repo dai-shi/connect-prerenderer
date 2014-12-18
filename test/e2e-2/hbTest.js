@@ -1,5 +1,7 @@
-/* global browser: false */
-/* global element: false */
+/* jshint undef: true, unused: true, latedef: true */
+/* jshint quotmark: single, eqeqeq: true, camelcase: true */
+
+/* global describe, it, expect, browser, element */
 
 describe('main e2e hashbang test for prerenderer', function() {
 
@@ -26,6 +28,11 @@ describe('main e2e hashbang test for prerenderer', function() {
   it('should get empty name prerendered', function() {
     browser().navigateTo('/hbtest01.html?_escaped_fragment_=');
     expect(element('body').text()).toContain('hello  user');
+  });
+
+  it('should pass the example in #15', function() {
+    browser().navigateTo('/hbtest02.html?_escaped_fragment--ms--');
+    expect(element('body').text()).toContain('hello');
   });
 
 
