@@ -25,9 +25,7 @@
 */
 
 var http = require('http');
-var urlLib = require('url');
-var request = require('request');
-var jsdom = require('jsdom');
+var renderer = require('./urlRenderer');
 
 var targetGeneratorMap = {
 
@@ -81,76 +79,12 @@ function getTargetURL(req, options) {
   return targetGenerator(req.url, options, req);
 }
 
-function filterHeaders(headers) {
-  var newHeaders = {};
-  for (var key in headers) {
-    if (key === 'host' || key === 'cookie' ||
-      (key.lastIndexOf('accept', 0) === 0 && key !== 'accept-encoding')) {
-      newHeaders[key] = headers[key];
-    }
-  }
-  return newHeaders;
-}
-
-function renderURL(url, headers, options, callback) {
-  var timeout = (options && options.timeout ? options.timeout : 5000);
-  var cookieDomain = options && options.cookieDomain;
-  request({
-    uri: urlLib.parse(url),
-    headers: filterHeaders(headers)
-  }, function(err, res, body) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (res.statusCode !== 200) {
-      callback(res.statusCode);
-      return;
-    }
-    var document;
-    var timer = null;
-    var done = function() {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-        var content;
-        try {
-          document.body.setAttribute('data-prerendered', 'true');
-          content = jsdom.serializeDocument(document);
-        } catch (err) {
-          callback(err);
-          return;
-        }
-        callback(null, content, res.headers);
-      }
-    };
-    timer = setTimeout(done, timeout);
-    try {
-      document = jsdom.jsdom(body, {
-        url: url,
-        cookie: headers.cookie,
-        cookieDomain: cookieDomain,
-        features: {
-          FetchExternalResources: ['script'],
-          ProcessExternalResources: ['script']
-        }
-      });
-      if (options && options.attachConsole) {
-        document.parentWindow.console = console;
-      }
-      document.onprerendered = done;
-    } catch (err) {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-      }
-      callback(err);
-      return;
-    }
-  });
-}
-
 function prerenderer(options) {
+  var renderURL = ((options || {}).subprocess || process.env.RENDERER_USE_SUBPROCESS) ?
+    renderer.subprocessRenderURL :
+    renderer.renderURL
+  ;
+
   return function(req, res, next) {
     var url = getTargetURL(req, options);
     if (url) {
@@ -177,11 +111,9 @@ function prerenderer(options) {
   };
 }
 
-
-
 if (process.env.NODE_ENV === 'unit-test') {
   exports.getTargetURL = getTargetURL;
-  exports.renderURL = renderURL;
+  exports.renderURL = process.env.RENDERER_USE_SUBPROCESS ? renderer.subprocessRenderURL : renderer.renderURL;
   exports.prerenderer = prerenderer;
 } else {
   module.exports = prerenderer;
