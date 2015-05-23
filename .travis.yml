@@ -1,3 +1,4 @@
 language: node_js
 nodejs:
   - 0.10
+  - 0.12
