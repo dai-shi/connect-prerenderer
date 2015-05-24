@@ -5,14 +5,14 @@
   "author": "Daishi Kato <daishi@axlight.com>",
   "dependencies": {
     "jsdom": "0.10.5",
-    "request": "~2.14.0"
+    "request": "2.14.0"
   },
   "devDependencies": {
-    "express": "~3.4.0",
-    "mocha": "~1.19",
-    "karma": "~0.12",
-    "karma-ng-scenario": "~0.1.0",
-    "karma-phantomjs-launcher": "~0.1"
+    "express": "3.4.8",
+    "mocha": "1.19.0",
+    "karma": "0.12.31",
+    "karma-ng-scenario": "0.1.0",
+    "karma-phantomjs-launcher": "0.1.4"
   },
   "repository": {
     "type": "git",
