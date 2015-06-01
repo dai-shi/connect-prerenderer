@@ -118,8 +118,7 @@ function renderURL(url, headers, options, callback) {
         var content;
         try {
           document.body.setAttribute('data-prerendered', 'true');
-          content = [document.doctype, document.innerHTML]
-            .filter(function (val) { return val; }).join();
+          content = jsdom.serializeDocument(document);
         } catch (err) {
           callback(err);
           return;
@@ -129,7 +128,7 @@ function renderURL(url, headers, options, callback) {
     };
     timer = setTimeout(done, timeout);
     try {
-      document = jsdom.jsdom(body, null, {
+      document = jsdom.jsdom(body, {
         url: url,
         cookie: headers.cookie,
         cookieDomain: cookieDomain,
@@ -165,7 +164,7 @@ function prerenderer(options) {
           res.setHeader('content-length', Buffer.byteLength(content));
           res.end(content);
         } else if (err) {
-          console.log('renderURL failed: ', err);
+          console.log('renderURL failed: ', err.stack);
           next();
         } else {
           //console.log('prerendered:' , content);
