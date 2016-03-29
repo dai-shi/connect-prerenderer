@@ -24,8 +24,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* jshint evil: true */
-
 var http = require('http');
 var urlLib = require('url');
 var request = require('request');
@@ -34,8 +32,8 @@ var jsdom = require('jsdom');
 var targetGeneratorMap = {
 
   'googlebot': function(url, options, req) {
-    var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
-    var fragment = req.query['_escaped_fragment_'];
+    var prefix = options.targetPrefix || 'http://' + req.headers.host;
+    var fragment = req.query._escaped_fragment_;
     if (!fragment && fragment !== '') {
       return null;
     }
@@ -47,25 +45,25 @@ var targetGeneratorMap = {
     var prerenderURLPrefix = '/PRERENDER';
     var prerenderURLPrefixLengthPlusOne = prerenderURLPrefix.length + 1;
     return function(url, options, req) {
-      var prefix = options['targetPrefix'] || 'http://' + req.headers.host;
-      var urlChecker = options['urlChecker'] || function(url) {
-          return url.lastIndexOf(prerenderURLPrefix, 0) === 0 && url.length >= prerenderURLPrefixLengthPlusOne;
-        };
+      var prefix = options.targetPrefix || 'http://' + req.headers.host;
+      var urlChecker = options.urlChecker || function(url) {
+        return url.lastIndexOf(prerenderURLPrefix, 0) === 0 && url.length >= prerenderURLPrefixLengthPlusOne;
+      };
       if (!urlChecker(req.url)) {
         return null;
       }
-      var replacer = options['targetReplacer'] || function(url) {
-          url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
-          var match = url.match(/HASH([-_:;|*+])?/);
-          if (match) {
-            url = url.replace(/HASH/, '#');
-            if (match[1]) {
-              var hex = match[1].charCodeAt().toString(16);
-              url = url.replace(new RegExp('\\x' + hex, 'g'), '/');
-            }
+      var replacer = options.targetReplacer || function(url) {
+        url = '/' + url.substring(prerenderURLPrefixLengthPlusOne);
+        var match = url.match(/HASH([-_:;|*+])?/);
+        if (match) {
+          url = url.replace(/HASH/, '#');
+          if (match[1]) {
+            var hex = match[1].charCodeAt().toString(16);
+            url = url.replace(new RegExp('\\x' + hex, 'g'), '/');
           }
-          return url;
-        };
+        }
+        return url;
+      };
       url = replacer(url);
       return prefix + url;
     };
@@ -76,9 +74,9 @@ var targetGeneratorMap = {
 function getTargetURL(req, options) {
   options = options || {};
 
-  var targetGenerator = options['targetGenerator'];
+  var targetGenerator = options.targetGenerator;
   if (typeof targetGenerator !== 'function') {
-    targetGenerator = targetGeneratorMap[targetGenerator] || targetGeneratorMap['default'];
+    targetGenerator = targetGeneratorMap[targetGenerator] || targetGeneratorMap.default;
   }
   return targetGenerator(req.url, options, req);
 }
@@ -105,7 +103,7 @@ function renderURL(url, headers, options, callback) {
       callback(err);
       return;
     }
-    if (res.statusCode != 200) {
+    if (res.statusCode !== 200) {
       callback(res.statusCode);
       return;
     }

@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "cookie-parser": "^1.4.1",
+    "eslint": "^2.5.3",
     "express": "^4.13.4",
     "karma": "^0.13.22",
     "karma-ng-scenario": "~0.1.0",
@@ -27,7 +28,8 @@
   ],
   "main": "./connect-prerenderer.js",
   "scripts": {
-    "test": "NODE_ENV=test ./runTest.sh"
+    "test": "NODE_ENV=test ./runTest.sh",
+    "eslint": "eslint ./connect-prerenderer.js"
   },
   "license": "BSD",
   "engines": {
