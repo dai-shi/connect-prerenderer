@@ -1,12 +1,13 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
 var prerenderer = require('../../connect-prerenderer.js');
 
 var app = express();
 
-app.configure('development', function() {
+if (process.env.NODE_ENV === 'development') {
   app.use(express.logger());
-});
-app.use(express.cookieParser());
+};
+app.use(cookieParser());
 app.use(prerenderer());
 app.use(express.static(__dirname + '/public'));
 
@@ -34,10 +35,10 @@ app.listen(process.env.PORT || 5050);
  */
 var app2 = express();
 
-app2.configure('development', function() {
+if (process.env.NODE_ENV === 'development') {
   app2.use(express.logger());
-});
-app2.use(express.cookieParser());
+};
+app2.use(cookieParser());
 app2.use(prerenderer({
   targetGenerator: 'googlebot'
 }));
