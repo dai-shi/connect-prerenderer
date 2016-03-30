@@ -1,7 +1,7 @@
 {
   "name": "connect-prerenderer",
   "description": "Express/connect middleware to pre-render ajax page for non-ajax browsers, especially using angular.js",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "Daishi Kato <daishi@axlight.com>",
   "dependencies": {
     "jsdom": "8.2.0",
@@ -28,7 +28,7 @@
   ],
   "main": "./connect-prerenderer.js",
   "scripts": {
-    "test": "NODE_ENV=test ./runTest.sh",
+    "test": "NODE_ENV=test ./runTest.sh && NODE_ENV=test RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
     "eslint": "eslint ./connect-prerenderer.js"
   },
   "license": "BSD",
