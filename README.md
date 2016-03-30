@@ -29,6 +29,7 @@ Options
 * cookieDomain: a domain name to allow passing cookies.
 * attachConsole: when truthy, attach `global.console` to `window.console` when prerendering files
   (useful for debugging)
+* subprocess: if `truthy`, do the rendering in a subprocess (it helps to prevent possible memory leaks in jsdom). You can also set the `RENDERER_USE_SUBPROCESS` environment variable to any value (except an empty string) to achieve the same result. Try it if you experience memory leaks.
 
 
 Coding conventions (client-side)
