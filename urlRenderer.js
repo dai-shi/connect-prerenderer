@@ -2,6 +2,7 @@
 
 'use strict';
 
+var path = require('path');
 var urlLib = require('url');
 var request = require('request');
 var jsdom = require('jsdom');
@@ -29,15 +30,14 @@ function renderURL(url, headers, options, callback) {
       callback(err);
       return;
     }
-    if (res.statusCode != 200) {
+    if (res.statusCode !== 200) {
       callback(res.statusCode);
       return;
     }
     var document;
     var timer = null;
     var done = function() {
-      if (!timer)
-        return;
+      if (!timer) return;
 
       clearTimeout(timer);
       timer = null;
@@ -45,8 +45,7 @@ function renderURL(url, headers, options, callback) {
       try {
         document.body.setAttribute('data-prerendered', 'true');
         content = jsdom.serializeDocument(document);
-      }
-      catch (err) {
+      } catch (err) {
         return callback(err);
       }
       callback(null, content, res.headers);
@@ -65,7 +64,7 @@ function renderURL(url, headers, options, callback) {
           FetchExternalResources: ['script'],
           ProcessExternalResources: ['script']
         },
-        done: done,
+        done: done
       });
       if (options && options.attachConsole) {
         document.parentWindow.console.log = function() {
@@ -91,7 +90,7 @@ function renderURL(url, headers, options, callback) {
 
 module.exports.renderURL = renderURL;
 module.exports.subprocessRenderURL = function subprocessRenderURL(url, headers, options, callback) {
-  var renderer = spawn(process.argv[0], [__dirname + '/urlRenderer.js', JSON.stringify([url, headers, options])], {
+  var renderer = spawn(process.argv[0], [path.join(__dirname, 'urlRenderer.js'), JSON.stringify([url, headers, options])], {
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
@@ -104,6 +103,7 @@ module.exports.subprocessRenderURL = function subprocessRenderURL(url, headers, 
 
   var timeout = (options && options.timeout ? options.timeout : 5000) + 1000;
   var timer = null;
+
   function done(err) {
     if (timer) {
       clearTimeout(timer);
@@ -114,15 +114,15 @@ module.exports.subprocessRenderURL = function subprocessRenderURL(url, headers, 
     var args;
     try {
       args = JSON.parse(allData);
-    }
-    catch(e) {
+    } catch (e) {
       args = [e];
     }
 
-    if (args[0] && !(args[0] instanceof Error))
+    if (args[0] && !(args[0] instanceof Error)) {
       args[0] = new Error(args[0]);
-    else if (err)
+    } else if (err) {
       args[0] = err;
+    }
 
     callback.apply(null, args);
   }
@@ -152,8 +152,7 @@ var args = [];
 
 try {
   args = JSON.parse(process.argv[2] || '[]');
-}
-catch (e) {
+} catch (e) {
   console.log(JSON.stringify([e.stack]));
   process.exit(1);
 }
