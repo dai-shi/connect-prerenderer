@@ -80,10 +80,10 @@ function getTargetURL(req, options) {
 }
 
 function prerenderer(options) {
-  var renderURL = ((options || {}).subprocess || process.env.RENDERER_USE_SUBPROCESS) ?
-    renderer.subprocessRenderURL :
-    renderer.renderURL
-  ;
+  options = options || {};
+
+  var useSubprocess = 'subprocess' in options ? !!options.subprocess : !!process.env.RENDERER_USE_SUBPROCESS;
+  var renderURL = useSubprocess ? renderer.subprocessRenderURL : renderer.renderURL;
 
   return function(req, res, next) {
     var url = getTargetURL(req, options);
@@ -111,10 +111,10 @@ function prerenderer(options) {
   };
 }
 
+module.exports = prerenderer;
+
 if (process.env.NODE_ENV === 'unit-test') {
-  exports.getTargetURL = getTargetURL;
-  exports.renderURL = process.env.RENDERER_USE_SUBPROCESS ? renderer.subprocessRenderURL : renderer.renderURL;
-  exports.prerenderer = prerenderer;
-} else {
-  module.exports = prerenderer;
+  module.exports.getTargetURL = getTargetURL;
+  module.exports.renderURL = process.env.RENDERER_USE_SUBPROCESS ? renderer.subprocessRenderURL : renderer.renderURL;
+  module.exports.prerenderer = prerenderer;
 }
