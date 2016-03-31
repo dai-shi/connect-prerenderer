@@ -64,18 +64,21 @@ function renderURL(url, headers, options, callback) {
           FetchExternalResources: ['script'],
           ProcessExternalResources: ['script']
         },
+        created: function(err, window) {
+          if (err) return;
+          if (options && options.attachConsole) {
+            window.console.log = function() {
+              Array.prototype.unshift.call(arguments, 'prerenderer[out]:');
+              console.error.apply(console, arguments);
+            };
+            window.console.error = function() {
+              Array.prototype.unshift.call(arguments, 'prerenderer[err]:');
+              console.error.apply(console, arguments);
+            };
+          }
+        },
         done: done
       });
-      if (options && options.attachConsole) {
-        document.parentWindow.console.log = function() {
-          Array.prototype.unshift.call(arguments, 'prerenderer[out]:');
-          console.error.apply(console, arguments);
-        };
-        document.parentWindow.console.error = function() {
-          Array.prototype.unshift.call(arguments, 'prerenderer[err]:');
-          console.error.apply(console, arguments);
-        };
-      }
       document.onprerendered = done;
     } catch (err) {
       if (timer) {
