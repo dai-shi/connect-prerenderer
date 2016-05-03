@@ -28,7 +28,7 @@
   ],
   "main": "./connect-prerenderer.js",
   "scripts": {
-    "test": "NODE_ENV=test ./runTest.sh && NODE_ENV=test RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
+    "test": "npm run eslint && ./runTest.sh && RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
     "eslint": "eslint ./connect-prerenderer.js ./urlRenderer.js"
   },
   "license": "BSD",
