@@ -9,6 +9,7 @@ var prerenderer = require('../connect-prerenderer.js');
 var spawn = require('child_process').spawn;
 
 describe('unit test for prerenderer', function() {
+  this.timeout(30000);
   var server = null;
   before(function() {
     server = spawn(process.argv[0], [path.join(__dirname, '/server/app.js')], {stdio: 'inherit'});
@@ -77,7 +78,7 @@ describe('unit test for prerenderer', function() {
   });
 
   it('should render google.com', function(done) {
-    prerenderer.renderURL('http://www.google.com/', {}, {timeout: 1000}, function(err, content) {
+    prerenderer.renderURL('http://www.google.com/', {}, {timeout: 5000}, function(err, content) {
       assert.ok(content.indexOf('google.com') >= 0);
       done();
     });
@@ -91,7 +92,7 @@ describe('unit test for prerenderer', function() {
     console.error = function() {
       text += [].slice.call(arguments).join(' ') + '\n';
     };
-    prerenderer.renderURL('http://localhost:5050/console.html', {}, {attachConsole: true, timeout: 1000}, function(err /* , content */) {
+    prerenderer.renderURL('http://localhost:5050/console.html', {}, {attachConsole: true, timeout: 5000}, function(err /* , content */) {
       console.error = oldErr;
       assert.ok(text.indexOf('prerenderer[out]: test') >= 0);
       done(err);
