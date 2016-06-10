@@ -20,7 +20,7 @@ function filterHeaders(headers) {
 }
 
 function renderURL(url, headers, options, callback) {
-  var timeout = (options && options.timeout ? options.timeout : 5000);
+  var timeout = (options && options.timeout ? options.timeout : 3000);
   var cookieDomain = options && options.cookieDomain;
   request({
     uri: urlLib.parse(url),
@@ -104,7 +104,7 @@ module.exports.subprocessRenderURL = function subprocessRenderURL(url, headers, 
     allData = Buffer.concat([allData, data]);
   });
 
-  var timeout = (options && options.timeout ? options.timeout : 5000) + 1000;
+  var timeout = (options && options.timeout ? options.timeout : 3000) + 1500;
   var timer = null;
 
   function done(err) {
