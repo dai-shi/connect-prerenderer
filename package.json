@@ -31,7 +31,7 @@
     "test": "npm run eslint && ./runTest.sh && RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
     "eslint": "eslint ./connect-prerenderer.js ./urlRenderer.js"
   },
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "engines": {
     "node": ">=4"
   }
