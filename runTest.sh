@@ -1,7 +1,5 @@
 #!/bin/sh
 
-./node_modules/.bin/mocha || exit 1
-
 node ./test/server/app.js &
 PID=$!
 

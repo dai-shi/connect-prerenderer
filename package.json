@@ -28,7 +28,8 @@
   ],
   "main": "./connect-prerenderer.js",
   "scripts": {
-    "test": "npm run eslint && ./runTest.sh && RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
+    "test": "npm run eslint && npm run mocha && ./runTest.sh && RENDERER_USE_SUBPROCESS=1 npm run mocha && RENDERER_USE_SUBPROCESS=1 ./runTest.sh",
+    "mocha": "mocha",
     "eslint": "eslint ./connect-prerenderer.js ./urlRenderer.js"
   },
   "license": "BSD-2-Clause",
