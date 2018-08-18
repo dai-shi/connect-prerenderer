@@ -9,7 +9,7 @@ Express/connect middleware to pre-render ajax page for non-ajax browsers, especi
 How to use
 ----------
 
-    % npm install connect-prerenderer
+    $ npm install connect-prerenderer
 
 In app.js:
 
